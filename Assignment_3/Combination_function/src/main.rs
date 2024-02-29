@@ -1,44 +1,32 @@
 use std::io;
-use std::num::ParseIntError;
 
 
-fn read_number(prompt: &str) -> u32 {
-    loop {
-        println!("{}", prompt);
-        let mut input = String::new();
-        io::stdin().read_line(&mut input).expect("Failed to read line");
-        match input.trim().parse::<u32>() {
-            Ok(num) => return num,
-            Err(ParseIntError { .. }) => {
-                println!("Please enter a valid number");
-                continue;
-            }
-        }
-    }
-}
-
-fn combination_function(a: u32, b: u32) -> Option<u32> {
+fn combination_function(a_str: String, b_str: String) -> u32 {
+    let a = a_str.trim().parse::<u32>().expect("Failed to parse 'a'");
+    let b = b_str.trim().parse::<u32>().expect("Failed to parse 'b'");
+    
     if a < b {
-        return None;
+        panic!("'a' must not be smaller than 'b'");
     }
-    Some(factorial(a) / (factorial(b) * factorial(a - b)))
+
+    factorial(a) / (factorial(b) * factorial(a - b))
 }
 
 fn factorial(n: u32) -> u32 {
-    if n == 0 {
-        return 1;
-    }
-    n * factorial(n - 1)
+    (1..=n).product()
 }
 
 fn main() {
-    let a = read_number("Enter the value of a: ");
-    let b = read_number("Enter the value of b: ");
+    println!("Enter the value of a: ");
+    let mut a_str = String::new();
+    io::stdin().read_line(&mut a_str).expect("Failed to read line");
 
-    match combination_function(a, b) {
-        Some(result) => println!("C({},{}) = {}", a, b, result),
-        None => println!("The value of a must be greater than b")
-    }
+    println!("Enter the value of b: ");
+    let mut b_str = String::new();
+    io::stdin().read_line(&mut b_str).expect("Failed to read line");
+
+    let result = combination_function(a_str.trim().to_string(), b_str.trim().to_string());
+    println!("C({},{}) = {}", a_str.trim(), b_str.trim(), result);
 }
 
 #[cfg(test)]
@@ -46,12 +34,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_a_is_not_smaller_than_b() {
-        assert_eq!(combination_function(5,3), Some(10));
+    #[should_panic]
+    fn test_a_not_smaller_than_b() {
+        combination_function("3".to_string(), "4".to_string());
     }
 
     #[test]
+    #[should_panic]
     fn test_both_a_and_b_are_positive() {
-        assert_eq!(combination_function(5,2), Some(10));
+        combination_function("-3".to_string(), "4".to_string());
     }
 }
