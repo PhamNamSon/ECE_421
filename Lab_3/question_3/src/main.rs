@@ -34,15 +34,17 @@ impl<'a> TreeNode<'a> {
 
 fn main() {
     let mut root = TreeNode {
-        data: "20",
+        data: "5",
         left_child: None,
         right_child: None,
     };
 
-    root.insert_node("10");
-    root.insert_node("30");
-    root.insert_node("5");
-    root.insert_node("15");
+    root.insert_node("3");
+    root.insert_node("2");
+    root.insert_node("4");
+    root.insert_node("7");
+    root.insert_node("6");
+    root.insert_node("8");
 
-    println!("{:?}", root);
+    println!("{:#?}", root);
 }
