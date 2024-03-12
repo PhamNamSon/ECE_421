@@ -64,31 +64,40 @@ mod tests {
         let mut stmt = conn.prepare("SELECT u_name FROM users WHERE u_name = ?;").unwrap();
         stmt.bind(1, username).unwrap();
         assert_eq!(stmt.next().unwrap(), State::Row);
+
+        let mut delete_stmt = conn.prepare("DELETE FROM users WHERE u_name = ?;").unwrap();
+        delete_stmt.bind(1, username).unwrap();
+        delete_stmt.next().unwrap();
     }
 
     #[test]
     fn test_pay() {
         let user_base = UserBase { fname: String::from("data/users.db") };
-        user_base.add_user("user1", "pass1").unwrap();
-        user_base.add_user("user2", "pass2").unwrap();
+        let user1 = "user1";
+        let user2 = "user2";
 
-        assert!(user_base.pay("user1", "user2", 100).is_ok());
+        user_base.add_user(user1, "pass1").unwrap();
+        user_base.add_user(user2, "pass2").unwrap();
+
+        assert!(user_base.pay(user1, user2, 100).is_ok());
 
         let conn = sqlite::open(&user_base.fname).unwrap();
         let mut stmt = conn.prepare("SELECT * FROM transactions WHERE u_from = ? AND u_to = ?;").unwrap();
-        stmt.bind(1, "user1").unwrap();
-        stmt.bind(2, "user2").unwrap();
+        stmt.bind(1, user1).unwrap();
+        stmt.bind(2, user2).unwrap();
         assert_eq!(stmt.next().unwrap(), State::Row);
+
+        let mut delete_trans_stmt = conn.prepare("DELETE FROM transactions WHERE u_from = ? AND u_to = ?;").unwrap();
+        delete_trans_stmt.bind(1, user1).unwrap();
+        delete_trans_stmt.bind(2, user2).unwrap();
+        delete_trans_stmt.next().unwrap();
+
+        let mut delete_user_stmt = conn.prepare("DELETE FROM users WHERE u_name IN (?, ?);").unwrap();
+        delete_user_stmt.bind(1, user1).unwrap();
+        delete_user_stmt.bind(2, user2).unwrap();
+        delete_user_stmt.next().unwrap();
     }
 }
 
 fn main() {
-    let user_base = UserBase { fname: String::from("data/users.db") };
-    let username = "testuser1";
-    let password = "password123";
-
-    match user_base.add_user(username, password) {
-        Ok(_) => println!("User added successfully"),
-        Err(e) => println!("Error adding user: {:?}", e),
-    }
 }

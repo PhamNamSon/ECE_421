@@ -1,103 +1,65 @@
-<&T as core::fmt::Debug>::fmt:
-        mov     rdi, qword ptr [rdi]
-        mov     eax, dword ptr [rsi + 52]
-        test    al, 16
-        jne     .LBB0_3
-        test    al, 32
-        jne     .LBB0_2
-        jmp     qword ptr [rip + _ZN4core3fmt3num3imp52_$LT$impl$u20$core..fmt..Display$u20$for$u20$i32$GT$3fmt17hc9733ab76fb3c52cE@GOTPCREL]
-.LBB0_3:
-        jmp     qword ptr [rip + _ZN4core3fmt3num53_$LT$impl$u20$core..fmt..LowerHex$u20$for$u20$i32$GT$3fmt17h8e89ccd3b870a36eE@GOTPCREL]
+example::question_2:
+        push    rax
+        test    rsi, rsi
+        je      .LBB0_11
+        xor     edx, edx
+        jmp     .LBB0_2
+.LBB0_10:
+        cmp     rdx, rsi
+        je      .LBB0_11
 .LBB0_2:
-        jmp     qword ptr [rip + _ZN4core3fmt3num53_$LT$impl$u20$core..fmt..UpperHex$u20$for$u20$i32$GT$3fmt17h891839fecf0a4aefE@GOTPCREL]
-
-core::ptr::drop_in_place<&i32>:
+        mov     r8, rdx
+        inc     rdx
+        mov     r9, rdx
+        mov     rcx, r8
+        cmp     rdx, rsi
+        jb      .LBB0_3
+        jmp     .LBB0_10
+.LBB0_6:
+        inc     r9
+        mov     rcx, rax
+        cmp     r9, rsi
+        jae     .LBB0_7
+.LBB0_3:
+        cmp     rcx, rsi
+        jae     .LBB0_12
+        mov     r10, qword ptr [rdi + 8*r9]
+        mov     rax, r9
+        cmp     r10, qword ptr [rdi + 8*rcx]
+        jl      .LBB0_6
+        mov     rax, rcx
+        jmp     .LBB0_6
+.LBB0_7:
+        cmp     rax, r8
+        je      .LBB0_10
+        cmp     rax, rsi
+        jae     .LBB0_13
+        mov     rcx, qword ptr [rdi + 8*r8]
+        mov     r9, qword ptr [rdi + 8*rax]
+        mov     qword ptr [rdi + 8*r8], r9
+        mov     qword ptr [rdi + 8*rax], rcx
+        jmp     .LBB0_10
+.LBB0_11:
+        mov     rax, rdi
+        mov     rdx, rsi
+        pop     rcx
         ret
-
-core::array::<impl core::fmt::Debug for [T; N]>::fmt:
-        push    r15
-        push    r14
-        push    r13
-        push    r12
-        push    rbx
-        sub     rsp, 32
-        mov     r14, rdi
-        lea     rbx, [rsp + 16]
-        mov     rdi, rbx
-        call    qword ptr [rip + core::fmt::Formatter::debug_list@GOTPCREL]
-        mov     qword ptr [rsp + 8], r14
-        lea     r15, [rip + .L__unnamed_1]
-        mov     r13, qword ptr [rip + core::fmt::builders::DebugList::entry@GOTPCREL]
-        lea     r12, [rsp + 8]
-        mov     rdi, rbx
-        mov     rsi, r12
-        mov     rdx, r15
-        call    r13
-        lea     rax, [r14 + 4]
-        mov     qword ptr [rsp + 8], rax
-        mov     rdi, rbx
-        mov     rsi, r12
-        mov     rdx, r15
-        call    r13
-        lea     rax, [r14 + 8]
-        mov     qword ptr [rsp + 8], rax
-        mov     rdi, rbx
-        mov     rsi, r12
-        mov     rdx, r15
-        call    r13
-        add     r14, 12
-        mov     qword ptr [rsp + 8], r14
-        mov     rdi, rbx
-        mov     rsi, r12
-        mov     rdx, r15
-        call    r13
-        mov     rdi, rbx
-        call    qword ptr [rip + core::fmt::builders::DebugList::finish@GOTPCREL]
-        add     rsp, 32
-        pop     rbx
-        pop     r12
-        pop     r13
-        pop     r14
-        pop     r15
-        ret
-
-.LCPI3_0:
-        .long   10
-        .long   10
-        .long   12
-        .long   32
-example::main:
-        sub     rsp, 88
-        movaps  xmm0, xmmword ptr [rip + .LCPI3_0]
-        movaps  xmmword ptr [rsp + 16], xmm0
-        lea     rax, [rsp + 16]
-        mov     qword ptr [rsp], rax
-        lea     rax, [rip + core::array::<impl core::fmt::Debug for [T; N]>::fmt]
-        mov     qword ptr [rsp + 8], rax
-        lea     rax, [rip + .L__unnamed_2]
-        mov     qword ptr [rsp + 40], rax
-        mov     qword ptr [rsp + 48], 2
-        mov     qword ptr [rsp + 72], 0
-        mov     rax, rsp
-        mov     qword ptr [rsp + 56], rax
-        mov     qword ptr [rsp + 64], 1
-        lea     rdi, [rsp + 40]
-        call    qword ptr [rip + std::io::stdio::_print@GOTPCREL]
-        add     rsp, 88
-        ret
-
-.L__unnamed_1:
-        .quad   core::ptr::drop_in_place<&i32>
-        .asciz  "\b\000\000\000\000\000\000\000\b\000\000\000\000\000\000"
-        .quad   <&T as core::fmt::Debug>::fmt
+.LBB0_12:
+        lea     rdx, [rip + .L__unnamed_1]
+        mov     rdi, rcx
+        call    qword ptr [rip + core::panicking::panic_bounds_check@GOTPCREL]
+.LBB0_13:
+        lea     rdx, [rip + .L__unnamed_2]
+        mov     rdi, rax
+        call    qword ptr [rip + core::panicking::panic_bounds_check@GOTPCREL]
 
 .L__unnamed_3:
-
-.L__unnamed_4:
-        .byte   10
+        .ascii  "/app/example.rs"
 
 .L__unnamed_2:
         .quad   .L__unnamed_3
-        .zero   8
-        .quad   .L__unnamed_4
-        .asciz  "\001\000\000\000\000\000\000"
+        .asciz  "\017\000\000\000\000\000\000\000\013\000\000\000\022\000\000"
+
+.L__unnamed_1:
+        .quad   .L__unnamed_3
+        .asciz  "\017\000\000\000\000\000\000\000\006\000\000\000\032\000\000"
