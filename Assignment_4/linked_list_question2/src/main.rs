@@ -7,26 +7,26 @@ pub enum LinkedList<T> {
     Head(List<T>),
 }
 
-impl<T: Clone> LinkedList<T> {
-    pub fn new(item: T) -> Self {
-        LinkedList::Head(cons(item, List::new()))
+impl<T> LinkedList<T> {
+    pub fn new(t: T) -> Self {
+        LinkedList::Head(cons(t, List::new()))
     }
 
     pub fn empty() -> Self {
         LinkedList::Tail
     }
 
-    pub fn push(self, item: T) -> Self {
+    pub fn push(self, t: T) -> Self {
         match self {
-            LinkedList::Head(list) => LinkedList::Head(cons(item, list)),
-            LinkedList::Tail => LinkedList::new(item),
+            LinkedList::Head(list) => LinkedList::Head(cons(t, list)),
+            LinkedList::Tail => LinkedList::new(t),
         }
     }
 
-    pub fn push_back(&mut self, item: T) {
-        *self = match self {
-            LinkedList::Head(list) => LinkedList::Head(list.clone().append(List::from(vec![item]))),
-            LinkedList::Tail => LinkedList::new(item),
+    pub fn push_back(&mut self, t: T) {
+        *self = match std::mem::replace(self, LinkedList::Tail) {
+            LinkedList::Head(list) => LinkedList::Head(list.append(List::from(vec![t]))),
+            LinkedList::Tail => LinkedList::new(t),
         }
     }
 
