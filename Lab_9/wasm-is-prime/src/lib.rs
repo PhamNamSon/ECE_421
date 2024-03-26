@@ -27,4 +27,3 @@ pub fn check_prime(s: &JsValue) -> u32 {
         }
     }
 }
-
